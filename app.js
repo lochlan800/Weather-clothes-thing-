@@ -58,6 +58,16 @@ function describeWeather(code) {
   return WEATHER_CODES[code] || { text: "Unknown conditions", icon: "🌡️" };
 }
 
+// Group a weather code into a background theme (see body[data-weather] in CSS).
+function weatherCategory(code) {
+  if ([0, 1].includes(code)) return "clear";
+  if ([2, 3].includes(code)) return "cloudy";
+  if ([45, 48].includes(code)) return "fog";
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return "snow";
+  if ([95, 96, 99].includes(code)) return "storm";
+  return "rain"; // drizzle, rain and showers
+}
+
 // Activities change the advice. `feelsOffset` accounts for body heat while
 // active (you can dress lighter when running than when standing around),
 // `active` swaps bulky rain gear for something you can move in, and `extras`
@@ -239,6 +249,9 @@ function render(place, weather) {
   const c = weather.current;
   const desc = describeWeather(c.weather_code);
   const rainChance = currentRainChance(weather);
+
+  // Switch the page background to match the current conditions.
+  document.body.dataset.weather = weatherCategory(c.weather_code);
 
   const locationParts = [place.name, place.admin1, place.country].filter(Boolean);
   placeName.textContent = locationParts.join(", ");

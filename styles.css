@@ -17,8 +17,46 @@ body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   background: linear-gradient(180deg, #dbe7f7 0%, var(--bg) 40%);
+  background-attachment: fixed;
   color: var(--text);
   min-height: 100vh;
+  transition: background 0.8s ease;
+}
+
+/* Weather-matched backgrounds, set on <body data-weather="..."> from app.js. */
+body[data-weather="clear"] {
+  background: linear-gradient(180deg, #4a93e8 0%, #8fc4f2 45%, #d6ecfb 100%);
+}
+
+body[data-weather="cloudy"] {
+  background: linear-gradient(180deg, #8ea2b5 0%, #b9c6d3 50%, #dde4ec 100%);
+}
+
+body[data-weather="fog"] {
+  background: linear-gradient(180deg, #9aa3ab 0%, #c2c8cd 50%, #e3e6e9 100%);
+}
+
+body[data-weather="rain"] {
+  background: linear-gradient(180deg, #3d4e63 0%, #5d7186 50%, #8a9bb0 100%);
+}
+
+body[data-weather="storm"] {
+  background: linear-gradient(180deg, #2a2f45 0%, #444a66 50%, #6b7186 100%);
+}
+
+body[data-weather="snow"] {
+  background: linear-gradient(180deg, #b9c9da 0%, #dce6f0 50%, #f3f7fb 100%);
+}
+
+/* Lighten the heading text on the darker (wet) themes for readability. */
+body[data-weather="rain"] header,
+body[data-weather="storm"] header {
+  color: #f4f7fb;
+}
+
+body[data-weather="rain"] .subtitle,
+body[data-weather="storm"] .subtitle {
+  color: #d4dbe6;
 }
 
 .app {
