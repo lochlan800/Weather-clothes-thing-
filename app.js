@@ -155,8 +155,10 @@ function decideClothing({ temp, feels, windSpeed, rainChance, code, activity }) 
 }
 
 async function geocode(query) {
+  // Ask for a few matches so we can prefer a UK / England result over a
+  // same-named place abroad (e.g. there's more than one "Horbury").
   const url =
-    "https://geocoding-api.open-meteo.com/v1/search?count=1&language=en&format=json&name=" +
+    "https://geocoding-api.open-meteo.com/v1/search?count=10&language=en&format=json&name=" +
     encodeURIComponent(query);
   const res = await fetch(url);
   if (!res.ok) throw new Error("Could not look up that place.");
@@ -164,7 +166,8 @@ async function geocode(query) {
   if (!data.results || data.results.length === 0) {
     throw new Error("No place found by that name. Try another spelling.");
   }
-  return data.results[0];
+  const ukMatch = data.results.find((r) => r.country_code === "GB");
+  return ukMatch || data.results[0];
 }
 
 async function getWeather(lat, lon) {
@@ -253,6 +256,15 @@ activitySelect.addEventListener("change", () => {
   if (lastPlace && lastWeather) render(lastPlace, lastWeather);
 });
 
-// Start with the weather in Horbury.
+// Quick-pick buttons load a named place straight away.
+for (const button of document.querySelectorAll(".quick-pick")) {
+  button.addEventListener("click", () => {
+    const place = button.dataset.place;
+    input.value = place;
+    search(place);
+  });
+}
+
+// Open on Horbury.
 input.value = "Horbury";
 search("Horbury");

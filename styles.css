@@ -71,6 +71,35 @@ header h1 {
   background: var(--accent-dark);
 }
 
+.quick-picks {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  color: var(--muted);
+}
+
+.quick-picks-label {
+  font-size: 0.95rem;
+}
+
+.quick-pick {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid #cdd7e3;
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--accent-dark);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.quick-pick:hover {
+  border-color: var(--accent);
+  background: #f2f6fe;
+}
+
 .activity {
   display: flex;
   align-items: center;
