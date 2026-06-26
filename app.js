@@ -316,3 +316,12 @@ activitySelect.addEventListener("input", onActivityChange);
 // Open on Horbury.
 input.value = "Horbury";
 search("Horbury");
+
+// Register the service worker so the app can be installed and works offline.
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {
+      /* Offline support is optional; ignore registration failures. */
+    });
+  });
+}

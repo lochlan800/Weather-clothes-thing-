@@ -19,6 +19,13 @@ clothing suggestions based on it. It starts by showing the weather in **Horbury*
 - **The week ahead** — a daily forecast (up to 16 days, as far as Open-Meteo
   provides) showing each day's high/low temperature, conditions and rain chance.
 
+## Install it as an app
+
+It's a Progressive Web App. When served over HTTPS (e.g. GitHub Pages), open it
+in your browser, tap the **⋮ / share** menu and choose **Add to Home Screen** /
+**Install**. It then launches full-screen with its own icon, like a native app,
+and the cached shell works offline (weather still needs a connection).
+
 ## Running it
 
 It's plain HTML/CSS/JS — no build step. Open `index.html` in a browser, or serve
