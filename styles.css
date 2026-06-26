@@ -1,0 +1,148 @@
+:root {
+  --bg: #eef3f8;
+  --card: #ffffff;
+  --accent: #2f6fed;
+  --accent-dark: #1f55c4;
+  --text: #1c2533;
+  --muted: #5b6878;
+  --shadow: 0 8px 24px rgba(31, 85, 196, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(180deg, #dbe7f7 0%, var(--bg) 40%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.subtitle {
+  margin: 0.5rem 0 1.75rem;
+  color: var(--muted);
+}
+
+.search {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.search input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cdd7e3;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: var(--card);
+}
+
+.search input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(47, 111, 237, 0.18);
+}
+
+.search button {
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search button:hover {
+  background: var(--accent-dark);
+}
+
+.status {
+  min-height: 1.25rem;
+  margin: 1rem 0 0;
+  color: var(--muted);
+}
+
+.status.error {
+  color: #c0392b;
+}
+
+.result {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.weather-card,
+.clothing-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.weather-card h2 {
+  margin: 0 0 1rem;
+  font-size: 1.4rem;
+}
+
+.weather-main {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.weather-icon {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.temperature {
+  font-size: 2.75rem;
+  font-weight: 700;
+}
+
+.conditions {
+  margin: 0.5rem 0 1rem;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.weather-details {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  color: var(--muted);
+}
+
+.clothing-card h3 {
+  margin: 0 0 1rem;
+}
+
+#clothing-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+#clothing-list li {
+  font-size: 1.05rem;
+}
