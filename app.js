@@ -4,28 +4,8 @@
 const form = document.getElementById("search-form");
 const input = document.getElementById("search-input");
 const activitySelect = document.getElementById("activity-select");
-const regionButtons = document.querySelectorAll(".region-btn");
 const statusEl = document.getElementById("status");
 const result = document.getElementById("result");
-
-// Selectable regions. `admin1` (when set) narrows results to that state/region.
-const REGIONS = {
-  england: {
-    label: "England",
-    countryCode: "GB",
-    admin1: null,
-    defaultPlace: "Horbury",
-    placeholder: "Search any place in England, e.g. Leeds",
-  },
-  california: {
-    label: "California",
-    countryCode: "US",
-    admin1: "California",
-    defaultPlace: "Los Angeles",
-    placeholder: "Search any place in California, e.g. San Diego",
-  },
-};
-let activeRegion = "england";
 
 // Remember the last lookup so changing activity re-renders without re-fetching.
 let lastPlace = null;
@@ -186,11 +166,9 @@ function decideClothing({ temp, feels, windSpeed, rainChance, code, activity }) 
   return items;
 }
 
-async function geocode(query, region) {
-  // Ask for a few matches so we can prefer one inside the chosen region over a
-  // same-named place elsewhere (e.g. there's more than one "Horbury").
+async function geocode(query) {
   const url =
-    "https://geocoding-api.open-meteo.com/v1/search?count=10&language=en&format=json&name=" +
+    "https://geocoding-api.open-meteo.com/v1/search?count=1&language=en&format=json&name=" +
     encodeURIComponent(query);
   const res = await fetch(url);
   if (!res.ok) throw new Error("Could not look up that place.");
@@ -198,12 +176,7 @@ async function geocode(query, region) {
   if (!data.results || data.results.length === 0) {
     throw new Error("No place found by that name. Try another spelling.");
   }
-  // Best: same country and (if set) same state/region. Then same country. Then anything.
-  const exact = data.results.find(
-    (r) => r.country_code === region.countryCode && (!region.admin1 || r.admin1 === region.admin1)
-  );
-  const sameCountry = data.results.find((r) => r.country_code === region.countryCode);
-  return exact || sameCountry || data.results[0];
+  return data.results[0];
 }
 
 async function getWeather(lat, lon) {
@@ -317,7 +290,7 @@ async function search(query) {
   result.hidden = true;
 
   try {
-    const place = await geocode(query, REGIONS[activeRegion]);
+    const place = await geocode(query);
     const weather = await getWeather(place.latitude, place.longitude);
     render(place, weather);
     statusEl.textContent = "";
@@ -340,24 +313,6 @@ function onActivityChange() {
 activitySelect.addEventListener("change", onActivityChange);
 activitySelect.addEventListener("input", onActivityChange);
 
-// Switch region: highlight the chosen button, update the placeholder, and load
-// that region's default place.
-function setRegion(key) {
-  if (!REGIONS[key]) return;
-  activeRegion = key;
-  const region = REGIONS[key];
-
-  for (const button of regionButtons) {
-    button.classList.toggle("is-active", button.dataset.region === key);
-  }
-  input.placeholder = region.placeholder;
-  input.value = region.defaultPlace;
-  search(region.defaultPlace);
-}
-
-for (const button of regionButtons) {
-  button.addEventListener("click", () => setRegion(button.dataset.region));
-}
-
-// Open on England (Horbury).
-setRegion("england");
+// Open on Horbury.
+input.value = "Horbury";
+search("Horbury");
