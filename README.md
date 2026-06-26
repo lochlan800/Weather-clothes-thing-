@@ -16,6 +16,8 @@ clothing suggestions based on it. It starts by showing the weather in **Horbury*
 - **Clothing advice** — `decideClothing()` in `app.js` picks layers based on how
   cold it feels (offset by the activity), plus extras for rain, snow, wind and
   strong sun. Changing the activity updates the advice without re-fetching.
+- **The week ahead** — a daily forecast (up to 16 days, as far as Open-Meteo
+  provides) showing each day's high/low temperature, conditions and rain chance.
 
 ## Running it
 

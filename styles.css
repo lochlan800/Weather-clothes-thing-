@@ -72,35 +72,6 @@ header h1 {
   background: var(--accent-dark);
 }
 
-.quick-picks {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.9rem;
-  color: var(--muted);
-}
-
-.quick-picks-label {
-  font-size: 0.95rem;
-}
-
-.quick-pick {
-  padding: 0.4rem 0.85rem;
-  border: 1px solid #cdd7e3;
-  border-radius: 999px;
-  background: var(--card);
-  color: var(--accent-dark);
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.quick-pick:hover {
-  border-color: var(--accent);
-  background: #f2f6fe;
-}
-
 .activity {
   margin-top: 1.25rem;
   padding: 1rem 1.1rem;
@@ -166,7 +137,8 @@ header h1 {
 }
 
 .weather-card,
-.clothing-card {
+.clothing-card,
+.forecast-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 16px;
@@ -224,4 +196,66 @@ header h1 {
 
 #clothing-list li {
   font-size: 1.05rem;
+}
+
+.forecast-card h3 {
+  margin: 0 0 1rem;
+}
+
+#forecast-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.forecast-day {
+  display: grid;
+  grid-template-columns: 1fr auto 5.5rem 3rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid #eef2f7;
+}
+
+.forecast-day:first-child {
+  border-top: none;
+}
+
+.forecast-head {
+  border-top: none;
+  padding-top: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.forecast-head .forecast-temps,
+.forecast-head .forecast-rain {
+  color: var(--muted);
+}
+
+.forecast-date {
+  font-weight: 600;
+}
+
+.forecast-icon {
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+.forecast-temps {
+  text-align: right;
+  color: var(--muted);
+}
+
+.forecast-temps strong {
+  color: var(--text);
+}
+
+.forecast-rain {
+  text-align: right;
+  color: var(--accent-dark);
+  font-size: 0.9rem;
 }

@@ -20,6 +20,7 @@ const windEl = document.getElementById("wind");
 const rainEl = document.getElementById("rain");
 const clothingHeading = document.getElementById("clothing-heading");
 const clothingList = document.getElementById("clothing-list");
+const forecastList = document.getElementById("forecast-list");
 
 // Map Open-Meteo WMO weather codes to a description + emoji icon.
 const WEATHER_CODES = {
@@ -176,6 +177,8 @@ async function getWeather(lat, lon) {
     "https://api.open-meteo.com/v1/forecast" +
     "?current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m" +
     "&hourly=precipitation_probability" +
+    "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max" +
+    "&forecast_days=16" +
     "&timezone=auto" +
     "&latitude=" + lat +
     "&longitude=" + lon;
@@ -192,6 +195,41 @@ function currentRainChance(weather) {
   const idx = times.findIndex((t) => t.slice(0, 13) === nowHour);
   if (idx >= 0 && probs[idx] != null) return probs[idx];
   return probs[0] ?? 0;
+}
+
+function renderForecast(weather) {
+  const daily = weather.daily || {};
+  const days = daily.time || [];
+  forecastList.innerHTML = "";
+
+  const head = document.createElement("li");
+  head.className = "forecast-day forecast-head";
+  head.innerHTML =
+    "<span>Day</span><span></span>" +
+    '<span class="forecast-temps">High / Low</span>' +
+    '<span class="forecast-rain">Rain</span>';
+  forecastList.appendChild(head);
+
+  for (let i = 0; i < days.length; i++) {
+    const date = new Date(days[i] + "T00:00:00");
+    const label =
+      i === 0
+        ? "Today"
+        : date.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+    const desc = describeWeather(daily.weather_code[i]);
+    const hi = Math.round(daily.temperature_2m_max[i]);
+    const lo = Math.round(daily.temperature_2m_min[i]);
+    const rain = daily.precipitation_probability_max?.[i] ?? 0;
+
+    const li = document.createElement("li");
+    li.className = "forecast-day";
+    li.innerHTML =
+      '<span class="forecast-date">' + label + "</span>" +
+      '<span class="forecast-icon" title="' + desc.text + '">' + desc.icon + "</span>" +
+      '<span class="forecast-temps"><strong>' + hi + "°</strong> / " + lo + "°</span>" +
+      '<span class="forecast-rain">' + rain + "%</span>";
+    forecastList.appendChild(li);
+  }
 }
 
 function render(place, weather) {
@@ -231,6 +269,8 @@ function render(place, weather) {
     clothingList.appendChild(li);
   }
 
+  renderForecast(weather);
+
   result.hidden = false;
 }
 
@@ -262,15 +302,6 @@ function onActivityChange() {
 }
 activitySelect.addEventListener("change", onActivityChange);
 activitySelect.addEventListener("input", onActivityChange);
-
-// Quick-pick buttons load a named place straight away.
-for (const button of document.querySelectorAll(".quick-pick")) {
-  button.addEventListener("click", () => {
-    const place = button.dataset.place;
-    input.value = place;
-    search(place);
-  });
-}
 
 // Open on Horbury.
 input.value = "Horbury";
