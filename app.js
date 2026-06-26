@@ -3,8 +3,13 @@
 
 const form = document.getElementById("search-form");
 const input = document.getElementById("search-input");
+const activitySelect = document.getElementById("activity-select");
 const statusEl = document.getElementById("status");
 const result = document.getElementById("result");
+
+// Remember the last lookup so changing activity re-renders without re-fetching.
+let lastPlace = null;
+let lastWeather = null;
 
 const placeName = document.getElementById("place-name");
 const weatherIcon = document.getElementById("weather-icon");
@@ -51,20 +56,74 @@ function describeWeather(code) {
   return WEATHER_CODES[code] || { text: "Unknown conditions", icon: "🌡️" };
 }
 
-// Decide what to wear from temperature, wind, rain and weather code.
-function decideClothing({ temp, feels, windSpeed, rainChance, code }) {
-  const items = [];
+// Activities change the advice. `feelsOffset` accounts for body heat while
+// active (you can dress lighter when running than when standing around),
+// `active` swaps bulky rain gear for something you can move in, and `extras`
+// are items specific to the activity.
+const ACTIVITIES = {
+  out: { label: "Out and about", indoor: false, active: false, feelsOffset: 0, extras: [] },
+  walking: {
+    label: "Walking",
+    indoor: false,
+    active: false,
+    feelsOffset: 2,
+    extras: ["Comfortable walking shoes"],
+  },
+  running: {
+    label: "Running",
+    indoor: false,
+    active: true,
+    feelsOffset: 10,
+    extras: ["Trainers", "Breathable, moisture-wicking kit"],
+  },
+  cycling: {
+    label: "Cycling",
+    indoor: false,
+    active: true,
+    feelsOffset: 7,
+    extras: ["Helmet", "Trainers or cycling shoes"],
+  },
+  gardening: {
+    label: "Gardening",
+    indoor: false,
+    active: false,
+    feelsOffset: 2,
+    extras: ["Old clothes you don't mind getting dirty", "Gardening gloves"],
+  },
+  chilling: { label: "Chilling indoors", indoor: true, active: false, feelsOffset: 0, extras: [] },
+};
 
-  // Base layers by how cold it feels.
-  if (feels <= 0) {
+// Decide what to wear from the weather and the chosen activity.
+function decideClothing({ temp, feels, windSpeed, rainChance, code, activity }) {
+  const act = ACTIVITIES[activity] || ACTIVITIES.out;
+
+  // Indoors the weather barely matters — just dress for the room temperature.
+  if (act.indoor) {
+    const items = ["Comfortable indoor clothes"];
+    if (feels <= 5) {
+      items.push("A warm jumper or hoodie", "Cosy socks");
+    } else if (feels <= 14) {
+      items.push("A jumper or long sleeves");
+    } else if (feels >= 24) {
+      items.push("Light, breathable clothes");
+    }
+    items.push(...act.extras);
+    return items;
+  }
+
+  const items = [];
+  const effectiveFeels = feels + act.feelsOffset;
+
+  // Base layers by how cold it feels for this activity.
+  if (effectiveFeels <= 0) {
     items.push("Heavy winter coat", "Thermal base layer", "Hat, gloves and a scarf");
-  } else if (feels <= 8) {
+  } else if (effectiveFeels <= 8) {
     items.push("Warm coat", "Jumper or fleece", "Long trousers");
-  } else if (feels <= 14) {
+  } else if (effectiveFeels <= 14) {
     items.push("Light jacket or hoodie", "Long-sleeved top", "Long trousers");
-  } else if (feels <= 20) {
+  } else if (effectiveFeels <= 20) {
     items.push("Light jumper or long sleeves", "Trousers or jeans");
-  } else if (feels <= 26) {
+  } else if (effectiveFeels <= 26) {
     items.push("T-shirt", "Light trousers or shorts");
   } else {
     items.push("Light, breathable T-shirt", "Shorts", "Stay hydrated");
@@ -76,7 +135,7 @@ function decideClothing({ temp, feels, windSpeed, rainChance, code }) {
   if (isSnow) {
     items.push("Waterproof boots", "Waterproof coat");
   } else if (isRain || rainChance >= 40) {
-    items.push("Waterproof jacket or umbrella");
+    items.push(act.active ? "Light waterproof jacket" : "Waterproof jacket or umbrella");
   }
 
   // Wind.
@@ -88,6 +147,9 @@ function decideClothing({ temp, feels, windSpeed, rainChance, code }) {
   if ((code === 0 || code === 1) && temp >= 20) {
     items.push("Sunglasses", "Sun cream");
   }
+
+  // Activity-specific extras.
+  items.push(...act.extras);
 
   return items;
 }
@@ -129,6 +191,9 @@ function currentRainChance(weather) {
 }
 
 function render(place, weather) {
+  lastPlace = place;
+  lastWeather = weather;
+
   const c = weather.current;
   const desc = describeWeather(c.weather_code);
   const rainChance = currentRainChance(weather);
@@ -148,6 +213,7 @@ function render(place, weather) {
     windSpeed: c.wind_speed_10m,
     rainChance,
     code: c.weather_code,
+    activity: activitySelect.value,
   });
 
   clothingList.innerHTML = "";
@@ -180,6 +246,11 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
   const query = input.value.trim();
   if (query) search(query);
+});
+
+// Changing the activity re-renders the advice using the weather we already have.
+activitySelect.addEventListener("change", () => {
+  if (lastPlace && lastWeather) render(lastPlace, lastWeather);
 });
 
 // Start with the weather in Horbury.

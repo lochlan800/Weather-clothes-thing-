@@ -71,6 +71,34 @@ header h1 {
   background: var(--accent-dark);
 }
 
+.activity {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+  color: var(--muted);
+}
+
+.activity label {
+  font-size: 0.95rem;
+}
+
+.activity select {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #cdd7e3;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.activity select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(47, 111, 237, 0.18);
+}
+
 .status {
   min-height: 1.25rem;
   margin: 1rem 0 0;

@@ -9,8 +9,13 @@ clothing suggestions based on it. It starts by showing the weather in **Horbury*
 - **Weather** — fetched from the free [Open-Meteo](https://open-meteo.com) API
   (no API key needed). Geocoding turns the place name into coordinates, then the
   forecast API returns current temperature, "feels like", wind and rain chance.
+- **Activity** — pick what you're doing (out and about, walking, running,
+  cycling, gardening, chilling indoors) and the advice adjusts: active choices
+  like running let you dress lighter and add kit like trainers, while "chilling
+  indoors" ignores the weather and just suggests comfy clothes.
 - **Clothing advice** — `decideClothing()` in `app.js` picks layers based on how
-  cold it feels, plus extras for rain, snow, wind and strong sun.
+  cold it feels (offset by the activity), plus extras for rain, snow, wind and
+  strong sun. Changing the activity updates the advice without re-fetching.
 
 ## Running it
 
