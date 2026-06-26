@@ -10,8 +10,13 @@
   <main class="app">
     <header>
       <h1>What Should I Wear?</h1>
-      <p class="subtitle">Search a place in England to get clothing advice based on the weather.</p>
+      <p class="subtitle">Search a place to get clothing advice based on the weather.</p>
     </header>
+
+    <div class="region-toggle" role="group" aria-label="Choose a region">
+      <button type="button" class="region-btn is-active" data-region="england">England</button>
+      <button type="button" class="region-btn" data-region="california">California</button>
+    </div>
 
     <form id="search-form" class="search">
       <input

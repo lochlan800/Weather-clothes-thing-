@@ -1,10 +1,13 @@
 # What Should I Wear?
 
-A small web app: search a place in England, see the current weather, and get
-clothing suggestions based on it. It starts by showing the weather in **Horbury**.
+A small web app: pick a region (**England** or **California**), search a place,
+see the current weather, and get clothing suggestions based on it. It starts by
+showing the weather in **Horbury**.
 
 ## How it works
 
+- **Region toggle** — switch between England and California; each loads a default
+  place (Horbury / Los Angeles) and biases searches to that region.
 - **Search bar** — type a place (defaults to Horbury on load).
 - **Weather** — fetched from the free [Open-Meteo](https://open-meteo.com) API
   (no API key needed). Geocoding turns the place name into coordinates, then the

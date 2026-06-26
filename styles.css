@@ -75,6 +75,46 @@ header h1 {
   color: var(--muted);
 }
 
+.region-toggle {
+  display: inline-flex;
+  padding: 4px;
+  margin-bottom: 1rem;
+  background: #e3eaf3;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  gap: 2px;
+}
+
+.region-btn {
+  padding: 0.5rem 1.4rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.region-btn:hover {
+  color: var(--text);
+}
+
+.region-btn.is-active {
+  background: var(--card);
+  color: var(--accent-dark);
+  box-shadow: 0 1px 3px rgba(16, 35, 70, 0.18);
+}
+
+/* Keep the toggle readable on the darker wet-weather backgrounds. */
+body[data-weather="rain"] .region-toggle,
+body[data-weather="storm"] .region-toggle {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
 .search {
   display: flex;
   gap: 0.5rem;
