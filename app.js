@@ -1,4 +1,4 @@
-// What Should I Wear? — weather-based clothing advice for places in England.
+// What Should I Wear? — weather-based clothing advice for any place worldwide.
 // Uses the free Open-Meteo APIs (no API key required).
 
 const form = document.getElementById("search-form");
