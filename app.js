@@ -18,6 +18,7 @@ const conditions = document.getElementById("conditions");
 const feelsLike = document.getElementById("feels-like");
 const windEl = document.getElementById("wind");
 const rainEl = document.getElementById("rain");
+const clothingHeading = document.getElementById("clothing-heading");
 const clothingList = document.getElementById("clothing-list");
 
 // Map Open-Meteo WMO weather codes to a description + emoji icon.
@@ -210,13 +211,17 @@ function render(place, weather) {
   windEl.textContent = Math.round(c.wind_speed_10m) + " km/h";
   rainEl.textContent = rainChance + "%";
 
+  const activity = activitySelect.value;
+  const act = ACTIVITIES[activity] || ACTIVITIES.out;
+  clothingHeading.textContent = "Wear this for " + act.label.toLowerCase();
+
   const items = decideClothing({
     temp: c.temperature_2m,
     feels: c.apparent_temperature,
     windSpeed: c.wind_speed_10m,
     rainChance,
     code: c.weather_code,
-    activity: activitySelect.value,
+    activity,
   });
 
   clothingList.innerHTML = "";
@@ -252,9 +257,11 @@ form.addEventListener("submit", (e) => {
 });
 
 // Changing the activity re-renders the advice using the weather we already have.
-activitySelect.addEventListener("change", () => {
+function onActivityChange() {
   if (lastPlace && lastWeather) render(lastPlace, lastWeather);
-});
+}
+activitySelect.addEventListener("change", onActivityChange);
+activitySelect.addEventListener("input", onActivityChange);
 
 // Quick-pick buttons load a named place straight away.
 for (const button of document.querySelectorAll(".quick-pick")) {
